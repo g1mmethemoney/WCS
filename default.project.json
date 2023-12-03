@@ -1,0 +1,29 @@
+{
+  "name": "WCS",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "WCS": {
+        "deps": {
+          "$path": "Packages"
+        },
+        "$path": "src/wcs"
+      }
+    },
+
+    "ServerScriptService": {
+      "Server": {
+        "$path": "src/server"
+      }
+    },
+
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "Client": {
+          "$path": "src/client"
+        }
+      }
+    }
+  }
+}

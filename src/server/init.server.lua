@@ -1,0 +1,4 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local wcs = require(ReplicatedStorage.WCS)
+
+local server = wcs.Server.new()

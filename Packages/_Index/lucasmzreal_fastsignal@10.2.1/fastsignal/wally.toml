@@ -1,0 +1,10 @@
+[package]
+
+name = "lucasmzreal/fastsignal"
+description = "FastSignal is a signal library made with consistency and expectable behaviour in mind, it is efficient, easy to use, and widely compatible."
+version = "10.2.1"
+license = "MIT"
+authors = ["RBLXUtils", "LucasMZReal"]
+
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
