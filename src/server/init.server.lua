@@ -1,4 +1,15 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local wcs = require(ReplicatedStorage.WCS)
 
-local server = wcs.Server.new()
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        local wcs_char = wcs.Character.new(character)
+        character:WaitForChild("Humanoid").Died:Connect(function()
+            wcs_char:Destroy()
+        end)
+    end)
+end)
+
+local server = wcs.CreateServer()
+server:Start()

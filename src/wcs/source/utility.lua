@@ -9,9 +9,19 @@ function logWarning(Warning, hideTraceback)
     warn(hideTraceback and `[{prefix}]: {Warning}` or `[{prefix}]: {Warning} \n \n {debug.traceback()}`)
 end
 
+function logMessage(Message)
+    print(`[{prefix}]: {Message}`)
+end
+
+local deps = script.Parent.Parent.deps
+local symbol = require(deps.symbol)
+
 return {
     consolePrefix = prefix,
     logError = logError,
     logWarning = logWarning,
-    activeFrameworkInstance = nil,
+    logMessage = logMessage,
+    activeHandler = nil,
+    clientCharacterIgnoreFlag = symbol("__unique_ClientCanInstantiateCharacter"),
+    debug = true,
 }

@@ -5,7 +5,7 @@ registry = "test"
 [[package]]
 name = "cheetiedotpy/wcs"
 version = "0.1.0"
-dependencies = [["fastsignal", "lucasmzreal/fastsignal@10.2.1"], ["janitor", "howmanysmall/janitor@1.15.6"], ["promise", "evaera/promise@4.0.0"]]
+dependencies = [["fastsignal", "lucasmzreal/fastsignal@10.2.1"], ["janitor", "howmanysmall/janitor@1.15.6"], ["promise", "evaera/promise@4.0.0"], ["reflex", "littensy/reflex@4.3.1"], ["symbol", "sleitnick/symbol@2.0.1"]]
 
 [[package]]
 name = "evaera/promise"
@@ -18,6 +18,16 @@ version = "1.15.6"
 dependencies = [["Promise", "evaera/promise@4.0.0"]]
 
 [[package]]
+name = "littensy/reflex"
+version = "4.3.1"
+dependencies = [["Promise", "evaera/promise@4.0.0"]]
+
+[[package]]
 name = "lucasmzreal/fastsignal"
 version = "10.2.1"
+dependencies = []
+
+[[package]]
+name = "sleitnick/symbol"
+version = "2.0.1"
 dependencies = []

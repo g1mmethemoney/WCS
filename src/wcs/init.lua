@@ -1,7 +1,15 @@
-local server = require(script.source.server)
-local character = require(script.source.character)
+local source = script.source
+
+local server = require(source.server)
+local character = require(source.character)
+local client = require(source.client)
 
 return {
-    Server = server,
+    CreateServer = function()
+        return server.new()
+    end,
+    CreateClient = function()
+        return client.new()
+    end,
     Character = character,
 }
