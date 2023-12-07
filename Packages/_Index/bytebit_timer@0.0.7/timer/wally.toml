@@ -1,0 +1,9 @@
+[package]
+name = "bytebit/timer"
+description = "A simple package for creating timers to more accurately track time and allow for cancellation. Written using roblox-ts."
+version = "0.0.7"
+license = "MIT"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]

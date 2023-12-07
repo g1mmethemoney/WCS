@@ -1,0 +1,16 @@
+{
+  "globIgnorePaths": [
+    "**/package.json",
+    "**/tsconfig.json"
+  ],
+  "name": "timer",
+  "tree": {
+    "$path": "out",
+    "include": {
+      "$path": "include",
+      "node_modules": {
+        "$path": "node_modules/@rbxts"
+      }
+    }
+  }
+}

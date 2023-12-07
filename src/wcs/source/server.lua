@@ -11,7 +11,11 @@ local rootProducer = require(state.rootProducer)
 
 local currentInstance
 
-local Server = {}
+local Server = setmetatable({}, {
+    __tostring = function()
+        return "Server"
+    end
+})
 Server.__index = Server
 
 function Server.new()
@@ -36,15 +40,24 @@ function Server:constructor()
         return Player.Character == Character.Instance
     end
 
-    self.root = rootProducer
-    self.broadcaster = reflex.createBroadcaster({
-        producers = {self.root},
-        dispatch = function(player, actions)
-            remotes.__dispatch:FireClient(player, actions)
-        end
-    })
+    self._root = rootProducer
+    self._modulesToRegister = {}
+end
 
-    self.root:applyMiddleware(self.broadcaster.middleware)
+function Server:RegisterDirectory(Directory)
+    if typeof(Directory) ~= "Instance" then
+        utility.logError(`Directory should be an instance.`)
+    end
+
+    if self.IsActive then
+        utility.logWarning(`Cannot register a path after the server has started!`)
+        return
+    end
+    
+    for _, Descendant in pairs(Directory:GetDescendants()) do
+        if not Descendant:IsA("ModuleScript") then continue end
+        table.insert(self._modulesToRegister, Descendant)
+    end
 end
 
 function Server:Start()
@@ -52,13 +65,26 @@ function Server:Start()
         utility.logWarning(`Attempted to :Start() server twice!`)
         return
     end
+
+    for _, module in pairs(self._modulesToRegister) do
+        require(module)
+    end
+    table.clear(self._modulesToRegister)
     
     self.IsActive = true;
     utility.activeHandler = self;
 
     remotes.__ready.OnServerEvent:Connect(function(player)
-        self.broadcaster:start(player)
+        self._broadcaster:start(player)
     end)
+
+    self._broadcaster = reflex.createBroadcaster({
+        producers = {self._root},
+        dispatch = function(player, actions)
+            remotes.__dispatch:FireClient(player, actions)
+        end
+    })
+    self._root:applyMiddleware(self._broadcaster.middleware)
 
     if utility.debug then utility.logMessage(`Started server successfully`) end
 end

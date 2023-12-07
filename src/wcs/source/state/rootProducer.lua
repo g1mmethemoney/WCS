@@ -11,12 +11,16 @@ local rootProducer = reflex.createProducer(initialState, {
 
         return State
     end,
-    removeCharacterData = function(State, Character, CharacterData)
+    setStatusData = function(State, Character, StatusId, StatusData)
         State = table.clone(State)
-        State[Character] = nil
+        if not State[Character] then return State end
+
+        local cloned = table.clone(State[Character].statusEffects)
+        cloned[StatusId] = StatusData
+        State[Character].statusEffects = cloned
 
         return State
-    end,
+    end
 })
 
 return rootProducer

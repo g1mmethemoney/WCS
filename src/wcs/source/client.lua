@@ -11,8 +11,15 @@ local character = require(source.character)
 local reflex = require(deps.reflex)
 local rootProducer = require(state.rootProducer)
 
+local middleware = source.middleware
+local devToolsMiddleware = require(middleware.devtoolsMiddleware)
+
 local currentInstance
-local Client = {}
+local Client = setmetatable({}, {
+    __tostring = function()
+        return "Client"
+    end
+})
 Client.__index = Client
 
 function Client.new()
@@ -33,13 +40,24 @@ end
 
 function Client:constructor() 
     self.IsActive = false
-    self.root = rootProducer
-    self.receiver = reflex.createBroadcastReceiver({
-        start = function()
-            remotes.__ready:FireServer()
-        end
-    })
-    self.root:applyMiddleware(self.receiver.middleware)
+    self._root = rootProducer
+    self._modulesToRegister = {}
+end
+
+function Client:RegisterDirectory(Directory)
+    if typeof(Directory) ~= "Instance" then
+        utility.logError(`Directory should be an instance.`)
+    end
+
+    if self.IsActive then
+        utility.logWarning(`Cannot register a path after the server has started!`)
+        return
+    end
+    
+    for _, Descendant in pairs(Directory:GetDescendants()) do
+        if not Descendant:IsA("ModuleScript") then continue end
+        table.insert(self._modulesToRegister, Descendant)
+    end
 end
 
 function Client:Start()
@@ -48,16 +66,25 @@ function Client:Start()
         return
     end
 
+    for _, module in pairs(self._modulesToRegister) do
+        require(module)
+    end
+    table.clear(self._modulesToRegister)
+
+    self._receiver = reflex.createBroadcastReceiver({
+        start = function()
+            remotes.__ready:FireServer()
+        end
+    })
+    self._root:applyMiddleware(self._receiver.middleware):applyMiddleware(devToolsMiddleware)
+
     remotes.__dispatch.OnClientEvent:Connect(function(actions)
-        self.receiver:dispatch(actions)
+        self._receiver:dispatch(actions)
     end)
 
     local previousAmount
-    self.root:subscribe(function(state)
-        local amount = 0
-        for _, __ in pairs(state) do
-            amount += 1
-        end
+    self._root:subscribe(function(state)
+        local amount = utility.countKeysInDict(state)
 
         if previousAmount == amount then
             return
@@ -70,7 +97,6 @@ function Client:Start()
 
             character.new(instance, utility.clientCharacterIgnoreFlag)
         end
-
         for instance, character in pairs(character.GetCurrentCharacterMap()) do
             if state[instance] then
                 continue
@@ -79,13 +105,11 @@ function Client:Start()
             character:Destroy()
         end
 
-        print(character.GetCurrentCharacterMap())
-
         previousAmount = amount
     end)
 
-    self.IsActive = true;
-    utility.activeHandler = self;
+    self.IsActive = true
+    utility.activeHandler = self
 
     if utility.debug then utility.logMessage(`Started client successfully`) end
 end

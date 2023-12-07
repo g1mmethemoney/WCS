@@ -3,9 +3,14 @@
 registry = "test"
 
 [[package]]
+name = "bytebit/timer"
+version = "0.0.7"
+dependencies = []
+
+[[package]]
 name = "cheetiedotpy/wcs"
 version = "0.1.0"
-dependencies = [["fastsignal", "lucasmzreal/fastsignal@10.2.1"], ["janitor", "howmanysmall/janitor@1.15.6"], ["promise", "evaera/promise@4.0.0"], ["reflex", "littensy/reflex@4.3.1"], ["symbol", "sleitnick/symbol@2.0.1"]]
+dependencies = [["fastsignal", "lucasmzreal/fastsignal@10.2.1"], ["janitor", "howmanysmall/janitor@1.15.6"], ["promise", "evaera/promise@4.0.0"], ["reflex", "littensy/reflex@4.3.1"], ["symbol", "sleitnick/symbol@2.0.1"], ["timer", "bytebit/timer@0.0.7"]]
 
 [[package]]
 name = "evaera/promise"

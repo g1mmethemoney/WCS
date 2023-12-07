@@ -8,6 +8,16 @@ Players.PlayerAdded:Connect(function(player)
         character:WaitForChild("Humanoid").Died:Connect(function()
             wcs_char:Destroy()
         end)
+
+        local stun = wcs.RegisterStatusEffect("Stun")
+        function stun:OnStart()
+            print("status has started")
+        end
+
+        task.delay(3, function()
+            local myStun = stun.new(wcs_char)
+            myStun:Start()
+        end)
     end)
 end)
 
